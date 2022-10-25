@@ -31,7 +31,7 @@ class PersonalityViewController: UIViewController {
     }
     
     //MARK: - Lifecycle methods
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -39,9 +39,11 @@ class PersonalityViewController: UIViewController {
         registerForKeyboardNotifications()
         childsTableView.dataSource = self
         childsTableView.delegate = self
+        fullNameTextField.delegate = self
+        ageTextField.delegate = self
         
     }
-
+    
     //MARK: - IBActions
     
     @IBAction func addChildPressed(_ sender: UIButton) {
@@ -80,26 +82,26 @@ class PersonalityViewController: UIViewController {
     }
     
     private func registerForKeyboardNotifications() {
-            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        }
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
     
     @objc private func keyboardWillShow(_ notification: NSNotification) {
-            guard let userInfo = notification.userInfo,
-                  let animationDuration = (userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue,
-                  let keyboardScreenEndFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
-            
-            if notification.name == UIResponder.keyboardWillHideNotification {
-                bottomConstraint.constant = 42
-            } else {
-                bottomConstraint.constant = keyboardScreenEndFrame.height + 10
-            }
-            
-            view.needsUpdateConstraints()
-            UIView.animate(withDuration: animationDuration) {
-                self.view.layoutIfNeeded()
-            }
+        guard let userInfo = notification.userInfo,
+              let animationDuration = (userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue,
+              let keyboardScreenEndFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
+        
+        if notification.name == UIResponder.keyboardWillHideNotification {
+            bottomConstraint.constant = 0
+        } else {
+            bottomConstraint.constant = keyboardScreenEndFrame.height - 70
         }
+        
+        view.needsUpdateConstraints()
+        UIView.animate(withDuration: animationDuration) {
+            self.view.layoutIfNeeded()
+        }
+    }
 }
 
 //MARK: - Extensions
@@ -127,7 +129,7 @@ extension PersonalityViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }
-   
+    
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         return false
     }
@@ -137,7 +139,7 @@ extension PersonalityViewController: UITableViewDelegate, UITableViewDataSource 
 extension PersonalityViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-
+        
         textField.resignFirstResponder()
         return true
     }
