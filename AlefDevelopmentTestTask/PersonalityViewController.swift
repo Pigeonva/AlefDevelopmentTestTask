@@ -72,8 +72,8 @@ class PersonalityViewController: UIViewController {
         let delete = UIAlertAction(title: "Сбросить данные", style: .destructive) { delete in
             self.childs = []
             self.childsTableView.reloadData()
-            self.fullNameTextField.text = ""
-            self.ageTextField.text = ""
+            self.fullNameTextField.text = nil
+            self.ageTextField.text = nil
         }
         let cancle = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
         actionSheet.addAction(delete)

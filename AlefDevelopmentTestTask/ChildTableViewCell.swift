@@ -25,6 +25,11 @@ class ChildTableViewCell: UITableViewCell {
         super.awakeFromNib()
         
     }
+    
+    override func prepareForReuse() {
+        fullNameTextField.text = nil
+        ageTextField.text = nil
+    }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
@@ -35,6 +40,8 @@ class ChildTableViewCell: UITableViewCell {
     //MARK: - IBActions
     
     @IBAction func deletePressed(_ sender: UIButton) {
+        fullNameTextField.text = nil
+        ageTextField.text = nil
         didDelete?(self)
     }
     
